@@ -20,8 +20,8 @@ E o melhor de tudo, o instalador interage com você, então você não precisa t
 ## Como utilizar 🙋‍♀️👨‍💻
 
 ## #Instalação automatica com 1 clique; Copiou? Colou!😎
-1. - Abra o terminal do seu Ubuntu 20.04
-2.  Copie e cole o link 👉 curl -sSL https://sh.owenbrasil.com/n8n.sh | bash
+1. Abra o terminal do seu Ubuntu 20.04
+2. Copie e cole o link 👉 curl -sSL https://sh.owenbrasil.com/n8n.sh | bash
 3. Siga as instruções na tela para concluir a instalação.
 
 Lembre-se, é possível instalar várias instâncias do N8N na mesma máquina utilizando este instalador.
