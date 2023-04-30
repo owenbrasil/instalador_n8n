@@ -1,11 +1,13 @@
-# Configurações da instalação
-read -p "Digite o nome da aplicação: " APP_NAME
-read -p "Digite o domínio da aplicação: " DOMAIN_NAME
-read -p "Digite a porta que deseja utilizar: " PORT
+#!/bin/bash
+
+# Exibe a tela de configurações usando o whiptail
+APP_NAME=$(whiptail --title "Configurações da instalação" --inputbox "Digite o nome da aplicação:" 10 60 3>&1 1>&2 2>&3)
+DOMAIN_NAME=$(whiptail --title "Configurações da instalação" --inputbox "Digite o domínio da aplicação:" 10 60 3>&1 1>&2 2>&3)
+PORT=$(whiptail --title "Configurações da instalação" --inputbox "Digite a porta que deseja utilizar:" 10 60 3>&1 1>&2 2>&3)
 
 # Verifica se a porta está em uso
 if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null ; then
-    echo "A porta $PORT já está em uso. Por favor, escolha outra porta."
+    whiptail --title "Erro" --msgbox "A porta $PORT já está em uso. Por favor, escolha outra porta." 10 60
     exit 1
 fi
 
@@ -25,28 +27,17 @@ fi
 sudo nano /etc/nginx/sites-available/$DOMAIN_NAME
 echo "server {
   server_name $DOMAIN_NAME;
-
   location / {
     proxy_pass http://127.0.0.1:$PORT;
-
     proxy_http_version 1.1;
-
     proxy_set_header Upgrade \$http_upgrade;
-
     proxy_set_header Connection 'upgrade';
-
     proxy_set_header Host \$host;
-
     proxy_set_header X-Real-IP \$remote_addr;
-
     proxy_set_header X-Forwarded-Proto \$scheme;
-
     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-
     proxy_cache_bypass \$http_upgrade;
-
     proxy_buffering off;
-
     proxy_cache off;
   }
 }" | sudo tee /etc/nginx/sites-available/$DOMAIN_NAME > /dev/null
@@ -56,6 +47,6 @@ sudo certbot --nginx
 sudo service nginx restart
 
 # Inicia o N8N com PM2
-pm2 start n8n --name $APP_NAME --cron-restart="0 0 * * *" -- -p $PORT
+pm2 start n8n --name N8N --cron-restart="0 0 * * *" -- -p $PORT
 
-echo "Instalação concluída! Acesse $DOMAIN_NAME para utilizar o N8N na porta $PORT."
+whiptail --title "Instalação concluída" --msgbox "Instalação concluída! Acesse $DOMAIN_NAME para utilizar o N8N na porta $PORT." 10 60
